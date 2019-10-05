@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Astar.hpp                                          :+:      :+:    :+:   */
+/*   AStar.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 19:58:52 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/04 21:46:13 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/05 18:22:16 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,57 +18,13 @@
 #include <iostream>
 #include <algorithm>
 #include <map>
+#include "HeuristicFunction.hpp"
 
 enum eState
 {
     FAILURE = 0,
     SUCCESS = 1
 };
-
-enum ePointState
-{
-    CLOSED = 0,
-    OPEN = 1,
-    NONE = 2
-};
-
-class Point
-{
-public:
-    Point(int i, int j, int value):
-                    _i(i), _j(j), _value(value), _point_state(NONE){}
-    Point(Point const & p): _i(p._i), _j(p._j), _value(p._value), _point_state(p._point_state){}
-    Point & operator=(Point const &p)
-    {
-        if (this != &p)
-            Point(p).swap(*this);
-        return *this;
-    }
-    void swap(Point & p)
-    {
-        std::swap(_i, p._i);
-        std::swap(_j, p._j);
-        std::swap(_value, p._value);
-        std::swap(_point_state, p._point_state);
-    }
-
-    int get_value(void) const { return _value; }
-    int get_i(void) const { return _i; }
-    int get_j(void) const { return _j; }
-    ePointState get_point_state(void) const { return _point_state; }
-    void set_point_state(ePointState state) { _point_state = state; }
-    
-private:
-    int _i;
-    int _j;
-    int _value;
-    ePointState _point_state;
-};
-
-bool operator==(Point const& p1, Point const &p2)
-{
-    return (p1.get_i() == p2.get_i() && p1.get_j() == p2.get_j());
-}
 
 class AStar
 {
@@ -81,7 +37,7 @@ public:
         _open_list.push_back(_starting_point);
         _G[_starting_point] = 0;
         path_cost(_starting_point);
-        
+        _heuristic_function = new ManhattanDistance();// = heuristic_func_generatir();
     }
     ~AStar(){};
 
@@ -90,7 +46,7 @@ public:
         while (!_open_list.empty())
         {
             Point *curr = available_min_F();
-            if (goal_state())
+            if (is_goal_state())
                 return SUCCESS;
             priint_open_closed();
             add_to_slosed(curr);
@@ -127,7 +83,7 @@ private:
         }
         return min;
     }
-    bool goal_state(void)
+    bool is_goal_state(void)
     {
         size_t c = 0;
         for(Point *item: _initial_state)
@@ -201,11 +157,9 @@ private:
 
         return unclosed;
     }
-    //ALG
-    long heuristic_function(Point * start) { return 1; }
     void path_cost(Point *p)
     {
-        _F[p] = _G[p] + heuristic_function(p);
+        _F[p] = _G[p] + _heuristic_function->path_cost(p);
     }
     //AUXILARY
     void priint_open_closed()
@@ -232,6 +186,7 @@ private:
     std::vector<Point *> _open_list;
     std::map<Point *, Point *> from;
     std::vector<Point *> _initial_state;
+    HeuristicFunction *_heuristic_function;
     int _puzzle_size;
     Point *_starting_point;
     std::map<Point *, long> _G;
