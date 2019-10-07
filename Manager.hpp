@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 18:43:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/06 16:39:04 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 17:28:26 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,15 @@ public:
     void run(){
         AStar algorithm(_puzzle);
         algorithm.run();
+        algorithm.show_result(_puzzle);
     }
        
 private:
     void get_comment()
     {
         std::getline(std::cin, _comment);
+        if (_comment == "# This puzzle is unsolvable")
+            exit(1);
     }
     Puzzle *_puzzle;
     std::string _comment;

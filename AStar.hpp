@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 19:58:52 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 16:58:20 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 20:14:59 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <algorithm>
 #include <map>
 #include "HeuristicFunction.hpp"
+
+static int d = 0;
 
 enum eState
 {
@@ -36,29 +38,77 @@ public:
         path_cost(_puzzle);
     }
     ~AStar(){};
+void test()
+{
+    for(Puzzle *open: _open_list)
+    {
+        int i = 0;
+        for(Puzzle *open2: _open_list)
+        {
+            i = 0;
+            if (*open == *open2)
+            {
+                i++;
+                if (i == 2)
+                {
+                std::cout << "POVTOR" << std::endl;
+                std::cout << d << std::endl;
+                exit(1);
+                }
+            }
+        }
 
+    }
+}
     eState run(void)
     {
         while (!_open_list.empty())
         {
+            test();
+            ++d;
+// if (d == 300) exit(1);
+            std::cout << d << std::endl;
             compute_new_state();
+
+            // std::cout << "CURR\n";
+            // std::cout << *_puzzle << std::endl;
+
             add_to_slosed();
-            std::cout << *(_puzzle) << std::endl;
-            if (is_goal_state())
+
+            // std::cout << "CLOSED\n";
+            // for(Puzzle *p: _closed_list)
+            //     std::cout << *p << std::endl;
+
+            if (is_goal_state(_puzzle))
                 return SUCCESS;
             for (Puzzle *state: unclosed_state())
             {
                 long tmp_g = _G[_puzzle] + distance();
                 if (!is_open(state) || tmp_g < _G[state])
                 {
+                    from[state] = _puzzle;
                     _G[state] = tmp_g;
                     path_cost(state);
-                    if (no_state(state)){
-                        add_to_open(state);}
+                    add_to_open(state);
                 }
             }
+            // std::cout << "OPEN\n";
+            // for(Puzzle *p: _open_list)
+            //     std::cout << *p << std::endl;
+            // std::cout <<"step "<<d<<" finished " << std::endl;
         }
         return FAILURE;
+    }
+    void show_result(Puzzle *p)
+    {
+        // Puzzle *tmp;
+
+        // while(!is_goal_state(p))
+        // {
+        //     std::cout << p << std::endl;
+        //     p = from[p];
+        // }
+        // std::cout << p << std::endl;
     }
 
 private:
@@ -70,7 +120,6 @@ private:
     {
         _puzzle = find_profitable_state();
     }
-    
     Puzzle *find_profitable_state()
     {
         Puzzle *min_F = _open_list.back();
@@ -81,35 +130,33 @@ private:
         }
         return min_F;
     }
-    
-    bool is_goal_state(void)
+    bool is_goal_state(Puzzle *p)
     {
-        int puzzle_size = _puzzle->get_puzzle_size();
+        int puzzle_size = p->get_puzzle_size();
         for (int i = 0; i < puzzle_size * puzzle_size; ++i)
         {
-            if ((_puzzle->get_data())[i].get_value() != (_puzzle->get_goal_state())[i].get_value())
+            if ((p->get_data())[i] != (p->get_goal_state())[i])
                 return false;
         }
         return true;
     }
-    //AVAILABLE
-    bool no_state(Puzzle *p)
-    {
-        return (p->get_puzzle_state() == NONE);
-    }
     //OPEN
     bool is_open(Puzzle *p)
     {
-        return (p->get_puzzle_state() == OPEN);
+        for(Puzzle *open: _open_list)
+        {
+            if (*open == *p)
+                return true;
+        }
+        return false;
     }
 
     void add_to_open(Puzzle *p)
     {
-        if(p->get_puzzle_state() == NONE)
-        {
-            _open_list.push_back(p);
-            p->set_puzzle_state(OPEN);
-        }
+        if (is_open(p))
+            return;
+        _open_list.push_back(p);
+        p->set_puzzle_state(OPEN);
     }
 
     void remove_from_open(Puzzle *p)
@@ -126,81 +173,76 @@ private:
     //CLOSED
     void add_to_slosed()
     {
-        remove_from_open(_puzzle);
         _puzzle->set_puzzle_state(CLOSED);
         _closed_list.push_back(_puzzle);
+        remove_from_open(_puzzle);
     }
 
-    std::vector<Puzzle *> unclosed_state()
+    bool is_closed(Puzzle *p)
     {
-        std::vector<Puzzle *> states;
-        states = get_available_states();
-        // remove those who are closed
-        for (auto i = 0; i < states.size(); ++i)
+        for(Puzzle *closed: _closed_list)
         {
-            for (Puzzle *closed: _closed_list)
-            {
-                if (states[i] == closed)
-                    states.erase(states.begin() + i, states.begin() + i + 1);
-            }
+            if (*closed == *p)
+                return true;
         }
-        return states;
+        return false;
     }
 
-    std::vector<Puzzle *> get_available_states(void)
+    std::vector<Puzzle *> unclosed_state(void)
     {
         std::vector<Point> init_state = _puzzle->get_data();
-        Point zero_point = _puzzle->get_zero_point();
         int size = _puzzle->get_puzzle_size();
-        int i = zero_point.get_i();
-        int j = zero_point.get_j();
-
+        int i = _puzzle->get_zero_point().get_i();
+        int j = _puzzle->get_zero_point().get_j();
         std::vector<Puzzle *> states;
+        Puzzle *pzl;
 
         if ( j - 1 >= 0 )
         {
-            Puzzle *pzl = new Puzzle(*_puzzle);
+            pzl = new Puzzle(*_puzzle);
             pzl->set_puzzle_state(NONE);
             pzl->swap_points(init_state[size * i + j - 1]);
-            states.push_back(pzl);
+            if (!is_closed(pzl))
+                states.push_back(pzl);
         }
         if ( j + 1 < size )
         {
-            Puzzle *pzl = new Puzzle(*_puzzle);
+            pzl = new Puzzle(*_puzzle);
             pzl->set_puzzle_state(NONE);
             pzl->swap_points(init_state[size * i + j + 1]);
-            states.push_back(pzl);
+            if (!is_closed(pzl))
+                states.push_back(pzl);
         }
         if ( i - 1 >= 0 )
         {
-            Puzzle *pzl = new Puzzle(*_puzzle);
+            pzl = new Puzzle(*_puzzle);
             pzl->set_puzzle_state(NONE);
             pzl->swap_points(init_state[size * (i - 1) + j]);
-            states.push_back(pzl);
+            if (!is_closed(pzl))
+                states.push_back(pzl);
         }
         if ( i + 1 < size )
-        {
-            Puzzle *pzl = new Puzzle(*_puzzle);
+        {  
+            pzl = new Puzzle(*_puzzle);
             pzl->set_puzzle_state(NONE);
             pzl->swap_points(init_state[size * (i + 1) + j]);
-            states.push_back(pzl);
+            if (!is_closed(pzl))
+                states.push_back(pzl);
         }
         return states;
     }
-    // //AUXILARY
-    // 
     long distance(){
         return 1;
     }
     void path_cost(Puzzle *p)
     {
         _F[p] = _G[p] + _heuristic_function->path_cost(p);
-        // std::cout << _F[p] << std::endl;
     }
 
     std::vector<Puzzle *> _closed_list;
     std::vector<Puzzle *> _open_list;
     HeuristicFunction *_heuristic_function;
+    std::map<Puzzle *, Puzzle *> from;
     std::map<Puzzle *, long> _G;
     std::map<Puzzle *, long> _F;
     Puzzle *_puzzle;

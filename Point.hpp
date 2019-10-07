@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/05 18:07:51 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 16:49:31 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 17:46:16 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ private:
 
 bool operator==(Point const& p1, Point const &p2)
 {
-    return (p1.get_i() == p2.get_i() && p1.get_j() == p2.get_j() && p1.get_value() == p2.get_value());
+    return (p1.get_value() == p2.get_value());
 }
 
 bool operator!=(Point const& p1, Point const &p2)

@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/06 14:37:31 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 16:56:29 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 19:26:27 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ public:
     //                     _goal_state(goal_state), _puzzle_state(NONE) {}
     Puzzle(Puzzle const &p)
     {
-        set_goal_state();
         _zero_point = p._zero_point;
         _data = p._data;
         _puzzle_size = p._puzzle_size;
