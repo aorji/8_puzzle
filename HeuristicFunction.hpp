@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/05 18:03:27 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/06 17:52:37 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 16:41:27 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,16 @@ public:
     ~MisplacedNum(){}
     long path_cost(Puzzle * _puzzle)
     {
-        const std::vector<Point *> curr = _puzzle->get_data();
-        const std::vector<Point *> goal = _puzzle->get_goal_state();
+        const std::vector<Point> curr = _puzzle->get_data();
+        const std::vector<Point> goal = _puzzle->get_goal_state();
 
         int n = _puzzle->get_puzzle_size();
         int h = 0;
-        for (int i = 0; i < n * n; ++n)
+        for (int i = 0; i < n * n; ++i)
         {
-            if (curr[i]->get_value() != goal[i]->get_value() &&
-                curr[i]->get_value() != '0')
-                h++;
+            if (curr[i].get_value() != goal[i].get_value() &&
+                curr[i].get_value() != '0')
+                ++h;
         }
         return h;
     }

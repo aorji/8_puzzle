@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/05 18:07:51 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/06 18:42:49 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 16:49:31 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 class Point
 {
 public:
+    Point():_i(-1), _j(-1), _value(-1){}
     Point(int i, int j, int value):
                     _i(i), _j(j), _value(value){}//, _point_state(NONE){}
     Point(Point const & p): _i(p._i), _j(p._j), _value(p._value){}//, _point_state(p._point_state){}
@@ -63,7 +64,12 @@ private:
 
 bool operator==(Point const& p1, Point const &p2)
 {
-    return (p1.get_i() == p2.get_i() && p1.get_j() == p2.get_j());
+    return (p1.get_i() == p2.get_i() && p1.get_j() == p2.get_j() && p1.get_value() == p2.get_value());
+}
+
+bool operator!=(Point const& p1, Point const &p2)
+{
+    return (!(p1 == p2));
 }
 
 std::ostream& operator<<(std::ostream &os, Point const &p)
