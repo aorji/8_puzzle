@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 18:43:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 17:28:26 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 20:21:13 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ public:
     void run(){
         AStar algorithm(_puzzle);
         algorithm.run();
-        algorithm.show_result(_puzzle);
+        algorithm.show_result();
     }
        
 private:

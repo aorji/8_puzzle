@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 19:58:52 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 20:14:59 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 20:33:18 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,48 +37,41 @@ public:
         _heuristic_function = new MisplacedNum();// = heuristic_func_generatir();
         path_cost(_puzzle);
     }
-    ~AStar(){};
-void test()
-{
-    for(Puzzle *open: _open_list)
+    void test()
     {
-        int i = 0;
-        for(Puzzle *open2: _open_list)
+        for(Puzzle *open: _open_list)
         {
-            i = 0;
-            if (*open == *open2)
+            int i = 0;
+            for(Puzzle *open2: _open_list)
             {
-                i++;
-                if (i == 2)
+                i = 0;
+                if (*open == *open2)
                 {
-                std::cout << "POVTOR" << std::endl;
-                std::cout << d << std::endl;
-                exit(1);
+                    i++;
+                    if (i == 2)
+                    {
+                        std::cout << "POVTOR" << std::endl;
+                        std::cout << d << std::endl;
+                        exit(1);
+                    }
                 }
             }
-        }
 
+        }
     }
-}
+    ~AStar(){};
     eState run(void)
     {
         while (!_open_list.empty())
         {
             test();
             ++d;
-// if (d == 300) exit(1);
-            std::cout << d << std::endl;
+            if (d == 300){
+                std::cout << d << std::endl;
+                exit(1);
+            }
             compute_new_state();
-
-            // std::cout << "CURR\n";
-            // std::cout << *_puzzle << std::endl;
-
             add_to_slosed();
-
-            // std::cout << "CLOSED\n";
-            // for(Puzzle *p: _closed_list)
-            //     std::cout << *p << std::endl;
-
             if (is_goal_state(_puzzle))
                 return SUCCESS;
             for (Puzzle *state: unclosed_state())
@@ -92,23 +85,20 @@ void test()
                     add_to_open(state);
                 }
             }
-            // std::cout << "OPEN\n";
-            // for(Puzzle *p: _open_list)
-            //     std::cout << *p << std::endl;
-            // std::cout <<"step "<<d<<" finished " << std::endl;
         }
         return FAILURE;
     }
-    void show_result(Puzzle *p)
+    void show_result()
     {
-        // Puzzle *tmp;
-
-        // while(!is_goal_state(p))
-        // {
-        //     std::cout << p << std::endl;
-        //     p = from[p];
-        // }
-        // std::cout << p << std::endl;
+        std::vector<Puzzle *> res;
+        Puzzle *p = _puzzle;
+        while(p)
+        {
+            res.push_back(p);
+            p = from[p];
+        }
+        for(int i = res.size() - 1; i >= 0; --i)
+            std::cout << *(res[i]);
     }
 
 private:
