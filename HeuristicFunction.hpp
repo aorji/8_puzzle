@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/05 18:03:27 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 16:41:27 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 21:03:24 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,25 @@ public:
     ~ManhattanDistance(){}
     long path_cost(Puzzle * _puzzle)
     {
-        return 1;
+        int size = _puzzle->get_puzzle_size();
+        std::vector<Point> data = _puzzle->get_data();
+        int manhattan_distance = 0;
+        for (int i = 0; i < size; ++i)
+        {
+            for (int j = 0; j < size; ++j)
+            {
+                int value = data[size * i + j].get_value();
+                if (value != 0)
+                {
+                    int targetX = (value - 1) / size;
+                    int targetY = (value - 1) % size;
+                    int dx = i - targetX;
+                    int dy = j - targetY;
+                    manhattan_distance += abs(dx) + abs(dy); 
+                } 
+            }
+        }
+        return manhattan_distance;
     }
 };
 

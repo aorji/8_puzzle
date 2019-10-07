@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/05 18:07:51 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 17:46:16 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 21:53:27 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,13 @@
 #include <algorithm>
 #include <iostream>
 
-// enum ePointState
-// {
-//     CLOSED = 0,
-//     OPEN = 1,
-//     NONE = 2
-// };
-
 class Point
 {
 public:
     Point():_i(-1), _j(-1), _value(-1){}
     Point(int i, int j, int value):
-                    _i(i), _j(j), _value(value){}//, _point_state(NONE){}
-    Point(Point const & p): _i(p._i), _j(p._j), _value(p._value){}//, _point_state(p._point_state){}
+                    _i(i), _j(j), _value(value){}
+    Point(Point const & p): _i(p._i), _j(p._j), _value(p._value){}
     Point & operator=(Point const &p)
     {
         if (this != &p)
@@ -41,25 +34,20 @@ public:
         std::swap(_i, p._i);
         std::swap(_j, p._j);
         std::swap(_value, p._value);
-        // std::swap(_point_state, p._point_state);
     }
     void swap_data(Point & p)
     {
         std::swap(_value, p._value);
-        // std::swap(_point_state, p._point_state);
     }
 
     int get_value(void) const { return _value; }
     int get_i(void) const { return _i; }
     int get_j(void) const { return _j; }
-    // ePointState get_point_state(void) const { return _point_state; }
-    // void set_point_state(ePointState state) { _point_state = state; }
     
 private:
     int _i;
     int _j;
     int _value;
-    // ePointState _point_state;
 };
 
 bool operator==(Point const& p1, Point const &p2)

@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/06 14:37:31 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 19:26:27 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 21:58:26 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,16 @@
 #include "Point.hpp"
 #include <vector>
 
-enum ePuzzleState
-{
-    CLOSED = 0,
-    OPEN = 1,
-    NONE = 2
-};
-
 class Puzzle
 {
 public:
-    explicit Puzzle(int size): _puzzle_size(size), _puzzle_state(NONE) { set_goal_state(); _zero_point = Point(); }
-    // Puzzle(std::vector<Point *> puzzle, int size): _data(puzzle), _puzzle_size(size), _puzzle_state(NONE) { set_goal_state(); }
-    // Puzzle(std::vector<Point *> puzzle, std::vector<Point *> goal_state, int size):
-    //                     _data(puzzle), _puzzle_size(size),
-    //                     _goal_state(goal_state), _puzzle_state(NONE) {}
+    explicit Puzzle(int size): _puzzle_size(size) { set_goal_state(); _zero_point = Point(); }
     Puzzle(Puzzle const &p)
     {
         _zero_point = p._zero_point;
         _data = p._data;
         _puzzle_size = p._puzzle_size;
         _goal_state = p._goal_state;
-        _puzzle_state = p._puzzle_state;
     }
     Puzzle & operator=(Puzzle const &p)
     {
@@ -51,7 +39,6 @@ public:
         std::swap(_data, p._data);
         std::swap(_puzzle_size, p._puzzle_size);
         std::swap(_goal_state, p._goal_state);
-        std::swap(_puzzle_state, p._puzzle_state);
     }
     void swap_points(Point p)
     {
@@ -103,16 +90,12 @@ public:
             //throu error
         }
     }
-
-    ePuzzleState get_puzzle_state(void) const { return _puzzle_state; }
-    void set_puzzle_state(ePuzzleState state) { _puzzle_state = state; }
     
 private:
     Point _zero_point;
     std::vector<Point> _data;
     int _puzzle_size;
     std::vector<Point> _goal_state;
-    ePuzzleState _puzzle_state;
 };
 
 std::ostream& operator<<(std::ostream &os, Puzzle const &p)
@@ -142,11 +125,5 @@ bool operator==(Puzzle const& p1, Puzzle const &p2)
     }
     return true;
 }
-// bool operator!=(Puzzle const& p1, Puzzle const &p2)
-// {
-//     if (!(p1 == p2))
-//         return true;
-//     return false;
-// }
 
 #endif

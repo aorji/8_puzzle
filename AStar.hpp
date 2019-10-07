@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 19:58:52 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 20:33:18 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/07 22:03:09 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,46 +34,18 @@ public:
     {
         add_to_open(_puzzle);
         _G[_puzzle] = 0;
-        _heuristic_function = new MisplacedNum();// = heuristic_func_generatir();
+        _heuristic_function = new ManhattanDistance();// = heuristic_func_generatir();
         path_cost(_puzzle);
-    }
-    void test()
-    {
-        for(Puzzle *open: _open_list)
-        {
-            int i = 0;
-            for(Puzzle *open2: _open_list)
-            {
-                i = 0;
-                if (*open == *open2)
-                {
-                    i++;
-                    if (i == 2)
-                    {
-                        std::cout << "POVTOR" << std::endl;
-                        std::cout << d << std::endl;
-                        exit(1);
-                    }
-                }
-            }
-
-        }
     }
     ~AStar(){};
     eState run(void)
     {
         while (!_open_list.empty())
         {
-            test();
-            ++d;
-            if (d == 300){
-                std::cout << d << std::endl;
-                exit(1);
-            }
             compute_new_state();
-            add_to_slosed();
             if (is_goal_state(_puzzle))
                 return SUCCESS;
+            add_to_slosed();
             for (Puzzle *state: unclosed_state())
             {
                 long tmp_g = _G[_puzzle] + distance();
@@ -99,6 +71,7 @@ public:
         }
         for(int i = res.size() - 1; i >= 0; --i)
             std::cout << *(res[i]);
+        std::cout << "\n" << res.size() - 1 << " steps" << std::endl;
     }
 
 private:
@@ -123,9 +96,12 @@ private:
     bool is_goal_state(Puzzle *p)
     {
         int puzzle_size = p->get_puzzle_size();
+        std::vector<Point> data = p->get_data();
+        std::vector<Point> goal = p->get_goal_state();
+        
         for (int i = 0; i < puzzle_size * puzzle_size; ++i)
         {
-            if ((p->get_data())[i] != (p->get_goal_state())[i])
+            if (data[i] != goal[i])
                 return false;
         }
         return true;
@@ -140,15 +116,12 @@ private:
         }
         return false;
     }
-
     void add_to_open(Puzzle *p)
     {
         if (is_open(p))
             return;
         _open_list.push_back(p);
-        p->set_puzzle_state(OPEN);
     }
-
     void remove_from_open(Puzzle *p)
     {
         for(std::vector<Puzzle *>::iterator it = _open_list.begin(); it != _open_list.end(); ++it)
@@ -163,7 +136,6 @@ private:
     //CLOSED
     void add_to_slosed()
     {
-        _puzzle->set_puzzle_state(CLOSED);
         _closed_list.push_back(_puzzle);
         remove_from_open(_puzzle);
     }
@@ -177,7 +149,6 @@ private:
         }
         return false;
     }
-
     std::vector<Puzzle *> unclosed_state(void)
     {
         std::vector<Point> init_state = _puzzle->get_data();
@@ -190,7 +161,6 @@ private:
         if ( j - 1 >= 0 )
         {
             pzl = new Puzzle(*_puzzle);
-            pzl->set_puzzle_state(NONE);
             pzl->swap_points(init_state[size * i + j - 1]);
             if (!is_closed(pzl))
                 states.push_back(pzl);
@@ -198,7 +168,6 @@ private:
         if ( j + 1 < size )
         {
             pzl = new Puzzle(*_puzzle);
-            pzl->set_puzzle_state(NONE);
             pzl->swap_points(init_state[size * i + j + 1]);
             if (!is_closed(pzl))
                 states.push_back(pzl);
@@ -206,7 +175,6 @@ private:
         if ( i - 1 >= 0 )
         {
             pzl = new Puzzle(*_puzzle);
-            pzl->set_puzzle_state(NONE);
             pzl->swap_points(init_state[size * (i - 1) + j]);
             if (!is_closed(pzl))
                 states.push_back(pzl);
@@ -214,7 +182,6 @@ private:
         if ( i + 1 < size )
         {  
             pzl = new Puzzle(*_puzzle);
-            pzl->set_puzzle_state(NONE);
             pzl->swap_points(init_state[size * (i + 1) + j]);
             if (!is_closed(pzl))
                 states.push_back(pzl);
