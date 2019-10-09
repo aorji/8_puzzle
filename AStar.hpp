@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 19:58:52 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 22:03:09 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/09 15:24:09 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 #include <map>
 #include "HeuristicFunction.hpp"
 
-static int d = 0;
-
 enum eState
 {
     FAILURE = 0,
@@ -32,9 +30,10 @@ class AStar
 public:
     explicit AStar(Puzzle *puzzle): _puzzle(puzzle)
     {
+        exit(1);
         add_to_open(_puzzle);
         _G[_puzzle] = 0;
-        _heuristic_function = new ManhattanDistance();// = heuristic_func_generatir();
+        _heuristic_function = new MisplacedTiles();// = heuristic_func_generatir();
         path_cost(_puzzle);
     }
     ~AStar(){};
@@ -97,12 +96,13 @@ private:
     {
         int puzzle_size = p->get_puzzle_size();
         std::vector<Point> data = p->get_data();
-        std::vector<Point> goal = p->get_goal_state();
+        int **goal = p->get_goal_state();
         
-        for (int i = 0; i < puzzle_size * puzzle_size; ++i)
+        for (int i = 0; i < puzzle_size; ++i)
         {
-            if (data[i] != goal[i])
-                return false;
+            for (int j = 0; j < puzzle_size; ++j)
+                if (data[puzzle_size * i + j].get_value() != goal[i][j])
+                    return false;
         }
         return true;
     }

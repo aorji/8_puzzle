@@ -6,11 +6,12 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/05 18:03:27 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/07 21:03:24 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/09 15:23:48 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
+// https://algorithmsinsight.wordpress.com/graph-theory-2/a-star-in-general/implementing-a-star-to-solve-n-puzzle/
+// https://www.cs.cmu.edu/~eugene/teach/ai00/sample/index.html
 #ifndef I_HEURISTIC_FUNC_HPP
 #define I_HEURISTIC_FUNC_HPP
 
@@ -23,23 +24,24 @@ public:
     virtual long path_cost(Puzzle *) = 0;
 };
 
-class MisplacedNum: public HeuristicFunction
+class MisplacedTiles: public HeuristicFunction
 {
 public:
-    MisplacedNum(){}
-    ~MisplacedNum(){}
+    MisplacedTiles(){}
+    ~MisplacedTiles(){}
     long path_cost(Puzzle * _puzzle)
     {
         const std::vector<Point> curr = _puzzle->get_data();
-        const std::vector<Point> goal = _puzzle->get_goal_state();
+        int **goal = _puzzle->get_goal_state();
 
         int n = _puzzle->get_puzzle_size();
         int h = 0;
-        for (int i = 0; i < n * n; ++i)
+        for (int i = 0; i < n; ++i)
         {
-            if (curr[i].get_value() != goal[i].get_value() &&
-                curr[i].get_value() != '0')
-                ++h;
+            for (int j = 0; j < n; ++j)
+                if (curr[n * i + j].get_value() != goal[i][j] &&
+                    curr[n * i + j].get_value() != '0')
+                    ++h;
         }
         return h;
     }
