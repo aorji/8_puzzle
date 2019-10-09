@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/06 14:37:31 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/09 15:27:17 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/09 21:16:42 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,40 +64,55 @@ public:
         int n = _puzzle_size;
         int m = _puzzle_size;
         int stop = _puzzle_size * _puzzle_size;
-        while (k < m && l < n) 
+        while (k < m && l < n)
         {
             for (int j = l; j < n; ++j) //left
             {
                 if (val == stop) val = 0;
-                _goal_state[k][j] = val++; 
+                _goal_state[k][j] = val++;
             }
             k++;
             for (int i = k; i < m; ++i) //down
             {
                 if (val == stop) val = 0;
-                _goal_state[i][n-1] = val++; 
+                _goal_state[i][n-1] = val++;
             }
             n--;
             if (k < m)  //left
-            { 
+            {
                 for (int j = n-1; j >= l; --j)
                 {
                     if (val == stop) val = 0;
-                    _goal_state[m-1][j] = val++; 
+                    _goal_state[m-1][j] = val++;
                 }
-                m--; 
+                m--;
             }
             if (l < n)  //up
-            { 
+            {
                 for (int i = m-1; i >= k; --i)
                 {
                     if (val == stop) val = 0;
-                    _goal_state[i][l] = val++; 
+                    _goal_state[i][l] = val++;
                 }
-                l++; 
+                l++;
             }
         }
     }
+    #ifdef REG
+    void    set_goal_state(void)
+    {
+        _goal_state = create_2D(_puzzle_size);
+        int k = 1;
+        for(int i = 0; i < _puzzle_size; ++i)
+        {
+            for(int j = 0; j < _puzzle_size; ++j)
+            {
+                _goal_state[i][j] = k++;
+            }
+        }
+        _goal_state[_puzzle_size - 1][ _puzzle_size - 1] = 0;
+    }
+    #endif
     
     void    fill_puzzle(void)
     {

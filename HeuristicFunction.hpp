@@ -6,16 +6,16 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/05 18:03:27 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/09 15:23:48 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/09 21:16:59 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // https://algorithmsinsight.wordpress.com/graph-theory-2/a-star-in-general/implementing-a-star-to-solve-n-puzzle/
-// https://www.cs.cmu.edu/~eugene/teach/ai00/sample/index.html
 #ifndef I_HEURISTIC_FUNC_HPP
 #define I_HEURISTIC_FUNC_HPP
 
 #include "Puzzle.hpp"
+#include <utility>
 
 class HeuristicFunction
 {
@@ -40,7 +40,7 @@ public:
         {
             for (int j = 0; j < n; ++j)
                 if (curr[n * i + j].get_value() != goal[i][j] &&
-                    curr[n * i + j].get_value() != '0')
+                    curr[n * i + j].get_value() != 0)
                     ++h;
         }
         return h;
@@ -52,6 +52,31 @@ class ManhattanDistance: public HeuristicFunction
 public:
     ManhattanDistance(){}
     ~ManhattanDistance(){}
+    
+    long path_cost(Puzzle * _puzzle)
+    {
+        int size = _puzzle->get_puzzle_size();
+        std::vector<Point> curr = _puzzle->get_data();
+        int **goal = _puzzle->get_goal_state();
+        int manhattan_distance = 0;
+        for(int i = 0; i < size; ++i)
+        {
+            for(int j = 0; j < size; ++j)
+            {
+                int value = curr[size * i + j].get_value();
+                if (value != 0)
+                {
+                    int x = curr[size * i + j].get_i();
+                    int y = curr[size * i + j].get_j();
+                    auto goal_x_y = return_index(value, goal, size);
+
+                    manhattan_distance += abs(x - goal_x_y.first) + abs(y - goal_x_y.second);
+                }
+            }
+        }
+        return manhattan_distance;
+    }
+    #ifdef REG
     long path_cost(Puzzle * _puzzle)
     {
         int size = _puzzle->get_puzzle_size();
@@ -73,6 +98,22 @@ public:
             }
         }
         return manhattan_distance;
+    }
+#endif
+    private:
+    std::pair<int, int> return_index(int value, int **goal, int size)
+    {
+        for(int i = 0; i < size; ++i)
+        {
+            for(int j = 0; j < size; ++j)
+            {
+                if (goal[i][j] == value)
+                    return std::make_pair(i, j);
+            }
+        }
+        // /throu exept
+        exit(1);
+        return std::make_pair(0, 0);
     }
 };
 

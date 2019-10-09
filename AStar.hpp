@@ -6,13 +6,14 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 19:58:52 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/09 15:24:09 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/09 21:42:27 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef I_ASTAR_HPP
 #define I_ASTAR_HPP
 
+static int safe = 0;
 #include <string>
 #include <iostream>
 #include <algorithm>
@@ -30,17 +31,24 @@ class AStar
 public:
     explicit AStar(Puzzle *puzzle): _puzzle(puzzle)
     {
-        exit(1);
         add_to_open(_puzzle);
         _G[_puzzle] = 0;
-        _heuristic_function = new MisplacedTiles();// = heuristic_func_generatir();
+        _heuristic_function = new ManhattanDistance();// = heuristic_func_generatir();
         path_cost(_puzzle);
     }
+
     ~AStar(){};
+
     eState run(void)
     {
         while (!_open_list.empty())
         {
+            #ifdef TEST
+            safe++;
+            if (safe == 10000)
+                exit(1);
+            if (!(safe % 1000)) std::cout << safe << std::endl;
+            #endif
             compute_new_state();
             if (is_goal_state(_puzzle))
                 return SUCCESS;
@@ -80,17 +88,12 @@ private:
 
     void compute_new_state(void)
     {
-        _puzzle = find_profitable_state();
-    }
-    Puzzle *find_profitable_state()
-    {
-        Puzzle *min_F = _open_list.back();
+        _puzzle = _open_list.back();
         for(Puzzle *item: _open_list)
         {
-            if (_F[item] < _F[min_F])
-                min_F = item;
+            if (_F[item] < _F[_puzzle])
+                _puzzle = item;
         }
-        return min_F;
     }
     bool is_goal_state(Puzzle *p)
     {
@@ -101,8 +104,10 @@ private:
         for (int i = 0; i < puzzle_size; ++i)
         {
             for (int j = 0; j < puzzle_size; ++j)
+            {
                 if (data[puzzle_size * i + j].get_value() != goal[i][j])
                     return false;
+            }
         }
         return true;
     }
