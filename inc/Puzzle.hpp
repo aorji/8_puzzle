@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:09:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/10 17:50:36 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/10 21:38:38 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 class Puzzle {
 
 public:
-    Puzzle(): _data(NULL){}
-    Puzzle(int *array, int size): _size(size), _data(array){}
+    Puzzle(): _data(NULL){ _zero_tile = INT_MAX; _fscore = INT_MAX; _gscore = INT_MAX; }
+    Puzzle(int *array, int size): _size(size), _data(array){ _zero_tile = INT_MAX; _fscore = INT_MAX; _gscore = INT_MAX; } //for goal state
     Puzzle(Puzzle const &p): _size(p._size), _data(new int[_size * _size]), _zero_tile(p._zero_tile), _fscore(p._fscore), _gscore(p._gscore)
     {
         int size = p._size * p._size;
@@ -32,6 +32,11 @@ public:
         if (this != &p)
             Puzzle(p).swap(*this);
         return *this;
+    }
+    void swap_tile(int tile)
+    {
+        std::swap(_data[_zero_tile], _data[tile]);
+        _zero_tile = tile;
     }
     void swap(Puzzle & p)
     {
@@ -56,10 +61,25 @@ public:
         _data = new int[size];
         
         for(int i = 0; i < size; ++i)
+        {
             std::cin >> _data[i];
+            if (_data[i] == 0)
+                _zero_tile = i;
+        }
     }
 
+    bool operator<(const Puzzle & p) const //for std::set
+    {
+        int size = _size * _size;
+        int i = 0;
+        for(int i = 0; i < size; ++i)
+            if (_data[i] != p._data[i])
+                return _data[i] < p._data[i];
+        return false;
+	}
+
     int *get_data(void) const{ return _data; }
+    int get_zero_tile(void) const{ return _zero_tile; }
     int get_size(void) const{ return _size; }
     float get_fscore(void) const{ return _fscore; }
     void set_fscore(float f) { _fscore = f; }
@@ -104,11 +124,11 @@ std::ostream& operator<<(std::ostream &os, Puzzle const &p)
     return os;
 }
 
-struct ComparePuzzle { 
+struct ComparePuzzle {  //for std::priority_queue
     bool operator()(Puzzle const& p1, Puzzle const& p2) 
-    { 
+    {
         return p1.get_fscore() > p2.get_fscore(); 
     } 
-}; 
+};
 
 #endif

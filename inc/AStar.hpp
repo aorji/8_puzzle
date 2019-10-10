@@ -6,16 +6,18 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:55:42 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/10 17:48:33 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/10 21:52:31 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef I_ASTAR_HPP
 #define I_ASTAR_HPP
 
+#include <set>
 #include <map>
-#include <cmath>
 #include <queue>
+#include <vector>
+#include <cmath>
 #include <algorithm>
 #include "HeuristicFunction.hpp"
 
@@ -28,47 +30,125 @@ public:
     }
     void run()
     {
-        f_score();
-        g_score(0);
+        g_score(_curr_state, 0);
+        f_score(_curr_state);
         _open_list.push(_curr_state);
-        std::cout <<_curr_state.get_fscore() << std::endl;
-        std::cout << _open_list.top() << std::endl;
-        std::cout << _open_list.top().get_fscore() << std::endl;
-        std::cout << _open_list.top().get_gscore() << std::endl;
-        // while (!_open_list.empty())
-        // {
-        //     compute_new_state();
-        //     if (is_goal_state())
-        //         return;
-        //     close_current_state();
-        //     for (Puzzle state: unclosed_states())
-        //     {
-        //         // long tmp_g = _G[_puzzle] + distance();
-        //         // if (!is_open(state) || tmp_g < _G[state])
-        //         // {
-        //         //     from[state] = _puzzle;
-        //         //     _G[state] = tmp_g;
-        //         //     path_cost(state);
-        //         //     add_to_open(state);
-        //         // }
-        //     }
-        // }
+        _under_review.insert(_curr_state);
+        while (!_open_list.empty() && _curr_state.get_gscore() < 250000)
+        {
+            compute_top_state();
+            if (is_goal_state())
+            {
+                std::cout<< "GOAL STATE\n";
+                return;
+            }
+            close_top_state();
+            for (Puzzle state: unclosed_states())
+            {
+                float tmp_g = _curr_state.get_gscore() + distance();
+                if (!is_under_review(state) || tmp_g < state.get_gscore())
+                {
+                    // from[state] = _curr_state;
+                    g_score(state, tmp_g);
+                    f_score(state);
+                    _open_list.push(state);
+                    _under_review.insert(state);
+                }
+            }
+        }
     }
-    void print_solution();
+    void print_solution()
+    {
+        // std::vector<Puzzle> res;
+        // Puzzle p = _curr_state;
+        // std::cout << from[_curr_state] << std::endl;
+        // while(p)
+        // {
+        //     res.push_back(p);
+        //     p = from[p];
+        // }
+        // for(int i = res.size() - 1; i >= 0; --i)
+        //     std::cout << *(res[i]);
+        // std::cout << "\n" << res.size() - 1 << " steps" << std::endl;
+    }
 
 private:
+    bool _success;
     std::priority_queue<Puzzle, std::vector<Puzzle>, ComparePuzzle> _open_list;
-    // std::set
+    std::set<Puzzle> _closed_list;
+    std::set<Puzzle> _under_review;
     Puzzle _curr_state;
     Puzzle _goal_state;
-    // std::map<Puzzle *, long> _G;
-    // std::map<Puzzle *, long> _F;
     // std::map<Puzzle, Puzzle> from;
+    std::vector<Puzzle> _available_states;
     HeuristicFunction *heuristic;
 
     AStar();
     AStar(AStar const &);
     AStar & operator=(AStar const &);
+    
+    bool is_under_review(Puzzle & p)
+    {
+        return (_under_review.count(p));
+    }
+    int distance()
+    {
+        return 1;
+    }
+    std::vector<Puzzle> unclosed_states(void)
+    {
+        //i % size - row; i / size - col
+        int zero = _curr_state.get_zero_tile();
+        int size = _curr_state.get_size();
+        Puzzle new_state;
+        //UP
+        if (zero - size >= 0)
+        {
+            new_state = _curr_state;
+            new_state.swap_tile(zero - size);
+            if (_closed_list.count(new_state) == 0)
+                _available_states.push_back(new_state);
+        }
+        //DOWN
+        if (zero + size < size * size)
+        {
+            new_state = _curr_state;
+            new_state.swap_tile(zero + size);
+            if (_closed_list.count(new_state) == 0)
+                _available_states.push_back(new_state);
+        }
+        // //LEFT
+        if (zero - 1 >= 0 && (zero - 1) % size == (zero % size) - 1)
+        {
+            new_state = _curr_state;
+            new_state.swap_tile(zero - 1);
+            if (_closed_list.count(new_state) == 0)
+                _available_states.push_back(new_state);
+        }
+        // //RIGHT
+        if (zero + 1 < size && (zero + 1) % size == (zero % size) + 1)
+        {
+            new_state = _curr_state;
+            new_state.swap_tile(zero + 1);
+            if (_closed_list.count(new_state) == 0)
+                _available_states.push_back(new_state);
+        }
+        return _available_states;
+    }
+    void close_top_state()
+    {
+        _open_list.pop();
+        _closed_list.insert(_curr_state);
+
+    }
+    void compute_top_state(void)
+    {
+        _curr_state = _open_list.top();
+    }
+    bool is_goal_state()
+    {
+        return _curr_state == _goal_state;
+    }
     void set_goal_state()
     {
         int size = _curr_state.get_size();
@@ -115,13 +195,13 @@ private:
         }
         _goal_state = Puzzle(goal_state, size);
     }
-    void f_score(void)
+    void f_score(Puzzle & p)
     {
-        _curr_state.set_fscore(_curr_state.get_gscore() + heuristic->path_cost(_curr_state, _goal_state));
+        p.set_fscore(p.get_gscore() + heuristic->path_cost(p, _goal_state));
     }
-    void g_score(int g)
+    void g_score(Puzzle & p, int g)
     {
-        _curr_state.set_gscore(g);
+        p.set_gscore(g);
     }
 };
 

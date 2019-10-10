@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 18:43:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/10 16:56:05 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/10 20:40:18 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ public:
         init_state.fill_in();
         AStar solver(init_state);
         solver.run();
-        // solver.print_solution();
+        solver.print_solution();
     }
 };
 
