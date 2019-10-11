@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 20:27:34 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/11 20:47:45 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/11 22:58:26 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 AStar::AStar(Puzzle *init_state): _curr_state(init_state)
 {
     set_goal_state();
-    heuristic = new MisplacedTiles();
+    heuristic = new ManhattanDistance();
 }
 bool AStar::run()
 {
@@ -36,17 +36,17 @@ bool AStar::run()
             Puzzle *reviewed = is_under_review(state); //return NULL if state not in open, or pointer to same state, if is in open
             if (!reviewed)
             {
-                from[state] = _curr_state;
                 set_score(state, tmp_g);
                 _open_list.push(state);
                 _available_states.push_back(state);
+                from[state] = _curr_state;
             }
             else
             {
                 if (tmp_g < reviewed->get_gscore())
                 {
-                    from[reviewed] = _curr_state;
                     set_score(reviewed, tmp_g);
+                    from[reviewed] = _curr_state;
                     if (in_closed(reviewed))
                     {
                         remove_from_closed(reviewed);
