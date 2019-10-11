@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:09:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/11 15:39:22 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/11 17:58:44 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,13 @@ class Puzzle {
 
 public:
     Puzzle(): _data(NULL){ _zero_tile = INT_MAX; _fscore = INT_MAX; _gscore = INT_MAX; }
-    Puzzle(int *array, int size): _size(size), _data(array){ _zero_tile = INT_MAX; _fscore = INT_MAX; _gscore = INT_MAX; } //for goal state
+    Puzzle(int *array, int size): _size(size), _data(new int[_size * _size])
+    {
+        size *= size;
+        for(int i = 0; i < size; ++i)
+            _data[i] = array[i];
+        set_zero_tile(); _fscore = INT_MAX; _gscore = INT_MAX;
+    }
     Puzzle(Puzzle const &p): _size(p._size), _data(new int[_size * _size]), _zero_tile(p._zero_tile), _fscore(p._fscore), _gscore(p._gscore)
     {
         int size = p._size * p._size;
@@ -32,6 +38,13 @@ public:
         if (this != &p)
             Puzzle(p).swap(*this);
         return *this;
+    }
+    void set_zero_tile()
+    {
+        int size = _size * _size;
+        for(int i = 0; i < size; ++i)
+            if (_data[i] == 0)
+                _zero_tile = i;
     }
     void reset_fg_scores(void)
     {
@@ -94,7 +107,7 @@ public:
     // {
     //     //with min f score is at the top
     //     return p1.get_fscore() < p2.get_fscore(); 
-    // } 
+    // }
 
 private:
     int _size;
