@@ -6,14 +6,14 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 18:43:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/11 15:58:01 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/11 20:16:42 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef I_MANAGER_HPP
 #define I_MANAGER_HPP
 
-#include "./AStar.hpp"
+#include "AStar.hpp"
 
 class Manager {
 

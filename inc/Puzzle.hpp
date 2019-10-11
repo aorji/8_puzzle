@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:09:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/11 17:58:44 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/11 20:46:25 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,86 +15,27 @@
 
 #include <iostream>
 #include <string>
+#include <set>
+#include <map>
+#include <queue>
+#include <vector>
+#include <cmath>
+#include <algorithm>
   
 class Puzzle {
 
 public:
-    Puzzle(): _data(NULL){ _zero_tile = INT_MAX; _fscore = INT_MAX; _gscore = INT_MAX; }
-    Puzzle(int *array, int size): _size(size), _data(new int[_size * _size])
-    {
-        size *= size;
-        for(int i = 0; i < size; ++i)
-            _data[i] = array[i];
-        set_zero_tile(); _fscore = INT_MAX; _gscore = INT_MAX;
-    }
-    Puzzle(Puzzle const &p): _size(p._size), _data(new int[_size * _size]), _zero_tile(p._zero_tile), _fscore(p._fscore), _gscore(p._gscore)
-    {
-        int size = p._size * p._size;
-        for(int i = 0; i < size; ++i)
-            _data[i] = p._data[i];
-    }
-    Puzzle & operator=(Puzzle const &p)
-    {
-        if (this != &p)
-            Puzzle(p).swap(*this);
-        return *this;
-    }
-    void set_zero_tile()
-    {
-        int size = _size * _size;
-        for(int i = 0; i < size; ++i)
-            if (_data[i] == 0)
-                _zero_tile = i;
-    }
-    void reset_fg_scores(void)
-    {
-        _fscore = INT_MAX; _gscore = INT_MAX;
-    }
-    void swap_tile(int tile)
-    {
-        std::swap(_data[_zero_tile], _data[tile]);
-        _zero_tile = tile;
-    }
-    void swap(Puzzle & p)
-    {
-        std::swap(_zero_tile, p._zero_tile);
-        std::swap(_data, p._data);
-        std::swap(_size, p._size);
-        std::swap(_fscore, p._fscore);
-        std::swap(_gscore, p._gscore);
-    }
+    Puzzle();
+    Puzzle(int *array, int size);
+    Puzzle(Puzzle const &p);
+    Puzzle & operator=(Puzzle const &p);
+    void set_zero_tile();
+    void reset_fg_scores(void);
+    void swap_tile(int tile);
+    void swap(Puzzle & p);
     ~Puzzle() { delete [] _data; }
 
-    void fill_in(void)
-    {
-        int c = 0;
-        std::string line;
-
-        do { std::getline(std::cin, line); }
-        while (line[0] == '#');
-
-        _size = line[0] - 48;
-        int size = _size * _size;
-        _data = new int[size];
-        
-        for(int i = 0; i < size; ++i)
-        {
-            std::cin >> _data[i];
-            if (_data[i] == 0)
-                _zero_tile = i;
-        }
-    }
-
-    // bool operator<(const Puzzle & p) const //for std::set
-    // {
-    //     int size = _size * _size;
-    //     int i = 0;
-    //     for(int i = 0; i < size; ++i)
-    //         if (_data[i] != p._data[i])
-    //             return _data[i] < p._data[i];
-    //     return false;
-	// }
-
+    void fill_in(void);
     int *get_data(void) const{ return _data; }
     int get_zero_tile(void) const{ return _zero_tile; }
     int get_size(void) const{ return _size; }
@@ -102,12 +43,6 @@ public:
     void set_fscore(float f) { _fscore = f; }
     float get_gscore(void) const{ return _gscore; }
     void set_gscore(float g) { _gscore = g; }
-
-    // bool operator < (Puzzle const& p1, Puzzle const& p2) 
-    // {
-    //     //with min f score is at the top
-    //     return p1.get_fscore() < p2.get_fscore(); 
-    // }
 
 private:
     int _size;
@@ -117,35 +52,8 @@ private:
     float _gscore;
 };
 
-bool operator==(Puzzle const& p1, Puzzle const &p2)
-{
-    int *d1 = p1.get_data();
-    int *d2 = p2.get_data();
-    int size = p1.get_size();
-    size *= size;
-
-    for(int i = 0; i < size; ++i)
-        if (d1[i] != d2[i])
-            return false;
-    return true;
-}
-
-std::ostream& operator<<(std::ostream &os, Puzzle const &p)
-{
-    int size = p.get_size();
-    int all_size = size * size;
-    int *data = p.get_data();
-
-    os << "\n";
-    for(int i = 0; i < all_size; ++i)
-    {
-        if (i && i % size == 0)
-            os << "\n";
-        os << data[i] << " ";
-    }
-    os << "\n";
-    return os;
-}
+bool operator==(Puzzle const& p1, Puzzle const &p2);
+std::ostream& operator<<(std::ostream &os, Puzzle const &p);
 
 struct ComparePuzzle {  //for std::priority_queue
     bool operator()(Puzzle *p1, Puzzle *p2) 
