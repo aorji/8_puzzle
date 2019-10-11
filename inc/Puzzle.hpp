@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:09:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/10 21:38:38 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/11 15:39:22 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@ public:
         if (this != &p)
             Puzzle(p).swap(*this);
         return *this;
+    }
+    void reset_fg_scores(void)
+    {
+        _fscore = INT_MAX; _gscore = INT_MAX;
     }
     void swap_tile(int tile)
     {
@@ -68,15 +72,15 @@ public:
         }
     }
 
-    bool operator<(const Puzzle & p) const //for std::set
-    {
-        int size = _size * _size;
-        int i = 0;
-        for(int i = 0; i < size; ++i)
-            if (_data[i] != p._data[i])
-                return _data[i] < p._data[i];
-        return false;
-	}
+    // bool operator<(const Puzzle & p) const //for std::set
+    // {
+    //     int size = _size * _size;
+    //     int i = 0;
+    //     for(int i = 0; i < size; ++i)
+    //         if (_data[i] != p._data[i])
+    //             return _data[i] < p._data[i];
+    //     return false;
+	// }
 
     int *get_data(void) const{ return _data; }
     int get_zero_tile(void) const{ return _zero_tile; }
@@ -85,6 +89,12 @@ public:
     void set_fscore(float f) { _fscore = f; }
     float get_gscore(void) const{ return _gscore; }
     void set_gscore(float g) { _gscore = g; }
+
+    // bool operator < (Puzzle const& p1, Puzzle const& p2) 
+    // {
+    //     //with min f score is at the top
+    //     return p1.get_fscore() < p2.get_fscore(); 
+    // } 
 
 private:
     int _size;
@@ -125,9 +135,10 @@ std::ostream& operator<<(std::ostream &os, Puzzle const &p)
 }
 
 struct ComparePuzzle {  //for std::priority_queue
-    bool operator()(Puzzle const& p1, Puzzle const& p2) 
+    bool operator()(Puzzle *p1, Puzzle *p2) 
     {
-        return p1.get_fscore() > p2.get_fscore(); 
+        //with min f score is at the top
+        return p1->get_fscore() > p2->get_fscore(); 
     } 
 };
 

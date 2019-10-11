@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/05 18:03:27 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/10 17:43:53 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/11 15:51:08 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ class HeuristicFunction
 {
 public:
     virtual ~HeuristicFunction(){}
-    virtual float path_cost(Puzzle const &curr_state, Puzzle const &goal_state) = 0;
+    virtual float path_cost(Puzzle *curr_state, Puzzle *goal_state) = 0;
 };
 
 class MisplacedTiles: public HeuristicFunction
@@ -27,12 +27,12 @@ class MisplacedTiles: public HeuristicFunction
 public:
     MisplacedTiles(){}
     ~MisplacedTiles(){}
-    float path_cost(Puzzle const &curr_state, Puzzle const &goal_state)
+    float path_cost(Puzzle *curr_state, Puzzle *goal_state)
     {
-        int *curr = curr_state.get_data();
-        int size = curr_state.get_size();
+        int *curr = curr_state->get_data();
+        int size = curr_state->get_size();
         size *= size;
-        int *goal= goal_state.get_data();
+        int *goal= goal_state->get_data();
         int h = 0;
 
         for (int i = 0; i < size; ++i)
@@ -48,11 +48,11 @@ public:
     ManhattanDistance(){}
     ~ManhattanDistance(){}
     
-    float path_cost(Puzzle const &curr_state, Puzzle const &goal_state)
+    float path_cost(Puzzle *curr_state, Puzzle *goal_state)
     {
-        int *curr = curr_state.get_data();
-        int size = curr_state.get_size();
-        int *goal= goal_state.get_data();
+        int *curr = curr_state->get_data();
+        int size = curr_state->get_size();
+        int *goal= goal_state->get_data();
         float manhattan_distance = 0;
         
         for(int i = 0; i < size * size; ++i)
