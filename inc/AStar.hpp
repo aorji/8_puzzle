@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:55:42 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/11 20:46:55 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 15:23:47 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 class AStar
 {
 public:
-    explicit AStar(Puzzle *init_state);
+    explicit AStar(Puzzle *init_state, eHeuristic heuristic);
     bool run();
     void print_solution();
 
@@ -28,9 +28,9 @@ private:
     std::vector<Puzzle *> _closed_list;
     Puzzle *_curr_state;
     Puzzle *_goal_state;
-    std::map<Puzzle *, Puzzle *> from;
+    std::map<Puzzle *, Puzzle *> _from;
     std::vector<Puzzle *> _available_states;
-    HeuristicFunction *heuristic;
+    HeuristicFunction *_heuristic;
 
     AStar();
     AStar(AStar const &);
@@ -54,6 +54,8 @@ private:
     {
         return 1;
     }
+
+    HeuristicFunction *choose_heuristic(eHeuristic heuristic);
 };
 
 #endif

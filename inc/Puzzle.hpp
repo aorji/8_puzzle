@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:09:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/11 20:46:25 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/11 21:51:36 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,14 @@ public:
     Puzzle();
     Puzzle(int *array, int size);
     Puzzle(Puzzle const &p);
+    ~Puzzle() { delete [] _data; }
+    
     Puzzle & operator=(Puzzle const &p);
+    
     void set_zero_tile();
     void reset_fg_scores(void);
     void swap_tile(int tile);
     void swap(Puzzle & p);
-    ~Puzzle() { delete [] _data; }
-
     void fill_in(void);
     int *get_data(void) const{ return _data; }
     int get_zero_tile(void) const{ return _zero_tile; }

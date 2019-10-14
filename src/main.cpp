@@ -6,14 +6,14 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:59:30 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/11 20:16:36 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 15:01:01 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Manager.hpp"
 
-int main()
+int main(int ac, char **av)
 {
-    Manager manager;
+    Manager manager(ac, av);
     manager.run();
 }

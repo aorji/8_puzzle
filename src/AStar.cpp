@@ -6,16 +6,16 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 20:27:34 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/11 22:58:26 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 15:27:43 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/AStar.hpp"
 
-AStar::AStar(Puzzle *init_state): _curr_state(init_state)
+AStar::AStar(Puzzle *init_state, eHeuristic heuristic): _curr_state(init_state)
 {
     set_goal_state();
-    heuristic = new ManhattanDistance();
+    _heuristic = choose_heuristic(heuristic);
 }
 bool AStar::run()
 {
@@ -39,14 +39,14 @@ bool AStar::run()
                 set_score(state, tmp_g);
                 _open_list.push(state);
                 _available_states.push_back(state);
-                from[state] = _curr_state;
+                _from[state] = _curr_state;
             }
             else
             {
                 if (tmp_g < reviewed->get_gscore())
                 {
                     set_score(reviewed, tmp_g);
-                    from[reviewed] = _curr_state;
+                    _from[reviewed] = _curr_state;
                     if (in_closed(reviewed))
                     {
                         remove_from_closed(reviewed);
@@ -67,7 +67,7 @@ void AStar::print_solution()
     while(p)
     {
         res.push_back(p);
-        p = from[p];
+        p = _from[p];
     }
     for(int i = res.size() - 1; i >= 0; --i)
         std::cout << *(res[i]);
@@ -210,5 +210,21 @@ void AStar::set_goal_state()
 void AStar::set_score(Puzzle *p, int g)
 {
     p->set_gscore(g);
-    p->set_fscore(g + heuristic->path_cost(p, _goal_state));
+    p->set_fscore(g + _heuristic->path_cost(p, _goal_state));
+}
+
+HeuristicFunction *AStar::choose_heuristic(eHeuristic heuristic)
+{
+    switch (heuristic)
+    {
+        case MT:
+            std::cout << "MisplacedTiles heuristic was chosen" << std::endl;
+            return new MisplacedTiles();
+        case MD:
+            std::cout << "ManhattanDistance heuristic was chosen" << std::endl;
+            return new ManhattanDistance();
+        case ED:
+            std::cout << "EuclideanDistance heuristic was chosen" << std::endl;
+            return new EuclideanDistance();
+    }
 }
