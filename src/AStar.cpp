@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 20:27:34 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 15:27:43 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 16:48:47 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,5 +226,8 @@ HeuristicFunction *AStar::choose_heuristic(eHeuristic heuristic)
         case ED:
             std::cout << "EuclideanDistance heuristic was chosen" << std::endl;
             return new EuclideanDistance();
+        default:
+            return new EuclideanDistance(); //NOT POSSIBLE
+
     }
 }

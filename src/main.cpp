@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:59:30 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 15:01:01 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 16:37:16 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 int main(int ac, char **av)
 {
-    Manager manager(ac, av);
-    manager.run();
+    try {
+        Manager manager(ac, av);
+        manager.run();
+    } catch(std::exception &e) {
+        std::cout << e.what() << std::endl;
+    }
 }

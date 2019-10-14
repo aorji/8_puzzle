@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/05 18:03:27 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 15:16:48 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 17:00:36 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 
 enum eHeuristic
 {
-    MT = 0,
-    MD = 1,
-    ED = 2
+    ERROR = 0,
+    MT = 1,
+    MD = 2,
+    ED = 3
 };
 
 class HeuristicFunction
@@ -77,8 +78,7 @@ public:
         for(int i = 0; i < size * size; ++i)
             if (goal[i] == value)
                 return i;
-        // /throu exept
-        exit(1);
+        throw CodeError();
         return 0;
     }
 };
@@ -113,8 +113,7 @@ public:
         for(int i = 0; i < size * size; ++i)
             if (goal[i] == value)
                 return i;
-        // /throu exept
-        exit(1);
+        throw CodeError();
         return 0;
     }
 };

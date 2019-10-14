@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 18:43:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 15:32:04 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 16:54:34 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 class Manager {
 
 public:
-    Manager(int ac, char **av): _ac(ac), _av(av) {}
+    Manager(int ac, char **av): _ac(ac), _av(av), _heuristic(ERROR) {}
     ~Manager(){ /*nothing to dealloc */ }
 
     void run(){
@@ -42,16 +42,14 @@ private:
         {
             for(int i = 0; i < heuristics.size(); ++i)
                 if (heuristics[i] == _av[1])
-                    _heuristic = static_cast<eHeuristic>(i);
+                    _heuristic = static_cast<eHeuristic>(i + 1);
         }
-        else
+        if (_ac != 2 || _heuristic == ERROR)
         {
             std::cout << "usage: " << heuristics.size() << " heuristics are available: " << std::endl;
             for(int i = 0; i < heuristics.size(); ++i)
                 std::cout << heuristics[i] << std::endl;
-
-            exit(1);
-            //throe + usage
+            throw InvalideHeuristic();
         }
     }
     
