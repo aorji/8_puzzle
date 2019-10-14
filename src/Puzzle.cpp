@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:29:26 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 16:42:12 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 18:14:33 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void Puzzle::reset_fg_scores(void)
 
 void Puzzle::fill_in(void)
 {
-    int c = 0;
     int zero_count = 0;
     std::string line;
     std::vector<std::string> params;
