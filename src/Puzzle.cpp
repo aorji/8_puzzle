@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:29:26 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/11 23:00:22 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 16:15:59 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,12 @@ void Puzzle::reset_fg_scores(void)
 {
     _fscore = INT_MAX; _gscore = INT_MAX;
 }
+
 void Puzzle::fill_in(void)
 {
     int c = 0;
     std::string line;
+    std::vector<std::string> params;
 
     do { std::getline(std::cin, line); }
     while (line[0] == '#');
@@ -67,13 +69,30 @@ void Puzzle::fill_in(void)
     int size = _size * _size;
     _data = new int[size];
     
-    for(int i = 0; i < size; ++i)
+    int k = 0;
+    for(int i = 0; i < _size; ++i)
     {
-        std::cin >> _data[i];
-        if (_data[i] == 0)
-            _zero_tile = i;
+        std::getline(std::cin, line);
+        split(line, params);
+        for(int j = 0; j < _size; ++j)
+        {
+            _data[k] = std::stoi(params[k]);
+            if (_data[k] == 0)
+                _zero_tile = k;
+            k++;
+        }
     }
 }
+
+void Puzzle::split(std::string str, std::vector<std::string> &container)
+{
+    std::stringstream ss(str);
+    std::string token;
+    while (std::getline(ss, token, ' ')) {
+        container.push_back(token);
+    }
+}
+
 Puzzle & Puzzle::operator=(Puzzle const &p)
 {
     if (this != &p)

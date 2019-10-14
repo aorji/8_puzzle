@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:09:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/11 21:51:36 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 16:09:01 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <sstream>
   
 class Puzzle {
 
@@ -51,6 +52,8 @@ private:
     int _zero_tile;
     float _fscore;
     float _gscore;
+
+    void split(std::string, std::vector<std::string> &);
 };
 
 bool operator==(Puzzle const& p1, Puzzle const &p2);
