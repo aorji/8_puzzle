@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 20:27:34 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 16:48:47 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 17:30:13 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ AStar::AStar(Puzzle *init_state, eHeuristic heuristic): _curr_state(init_state)
 }
 bool AStar::run()
 {
-    // if (!is_solvabel(_curr_state))
-    //     return (_solved = false);
     set_score(_curr_state, 0);
     _open_list.push(_curr_state);
     _available_states.push_back(_curr_state);
@@ -73,17 +71,7 @@ void AStar::print_solution()
         std::cout << *(res[i]);
     std::cout << "\n" << res.size() - 1 << " steps" << std::endl;
 }
-int AStar::is_solvabel(Puzzle *p) 
-{
-    int *data = p->get_data();
-    int inv_count = 0;
-    int size = p->get_size() * p->get_size();
-    for (int i = 0; i < size - 1; ++i) 
-        for (int j = i + 1; j < size; ++j) 
-            if (data[j] && data[i] &&  data[i] > data[j]) 
-                inv_count++;
-    return (inv_count % 2 == 0); 
-}
+
 void AStar::remove_from_closed(Puzzle *p)
 {
     for(std::vector<Puzzle *>::iterator it = _closed_list.begin(); it != _closed_list.end(); ++it)

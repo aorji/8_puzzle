@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 16:26:48 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 16:59:39 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 17:30:42 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,18 @@ CodeError::operator=( CodeError const & rhs) {
 }
 const char *
 CodeError::what() const throw() {
+    return error_line.c_str();
+}
+
+NotSolvable::NotSolvable ( ) { error_line = "error: Puzzle is not solvable"; }
+NotSolvable::NotSolvable ( NotSolvable const & src ) { *this = src; }
+NotSolvable::~NotSolvable ( ) throw() {}
+NotSolvable &
+NotSolvable::operator=( NotSolvable const & rhs) {
+	(void)rhs;
+	return *this;
+}
+const char *
+NotSolvable::what() const throw() {
     return error_line.c_str();
 }

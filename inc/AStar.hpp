@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:55:42 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 15:23:47 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 17:30:22 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ private:
     AStar();
     AStar(AStar const &);
     AStar & operator=(AStar const &);
-    
-    int is_solvabel(Puzzle *p);
 
     void compute_top_state(void);
     
