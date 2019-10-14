@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 20:27:34 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 17:30:13 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/14 17:39:16 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@ AStar::AStar(Puzzle *init_state, eHeuristic heuristic): _curr_state(init_state)
 }
 bool AStar::run()
 {
+    int loop_count = 0;
+    int size = _goal_state->get_size();
     set_score(_curr_state, 0);
     _open_list.push(_curr_state);
     _available_states.push_back(_curr_state);
-    while (!_open_list.empty())// && _curr_state->get_gscore() < 250000)
+    while (!_open_list.empty() && ++loop_count)
     {
         compute_top_state();
         if (is_goal_state())
@@ -53,13 +55,20 @@ bool AStar::run()
                 }
             }
         }
+        if ((size == 3 && loop_count >= 250000) ||
+            (size == 4 && loop_count >= 600000) ||
+            (size >= 5 && loop_count >= 1000000))
+            return false;
     }
     return (_solved = false);
 }
 void AStar::print_solution()
 {
     if (!_solved)
+    {
+        std::cout << "Solution not found" << std::endl;
         return ;
+    }
     std::vector<Puzzle *> res;
     Puzzle *p = _curr_state;
     while(p)
