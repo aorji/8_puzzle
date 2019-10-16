@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 20:27:34 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 17:39:16 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/16 14:50:30 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 AStar::AStar(Puzzle *init_state, eHeuristic heuristic): _curr_state(init_state)
 {
+    _complexity_in_time = 0;
+    _complexity_in_size = 0;
     set_goal_state();
     _heuristic = choose_heuristic(heuristic);
 }
@@ -22,7 +24,7 @@ bool AStar::run()
     int loop_count = 0;
     int size = _goal_state->get_size();
     set_score(_curr_state, 0);
-    _open_list.push(_curr_state);
+    add_to_open(_curr_state);
     _available_states.push_back(_curr_state);
     while (!_open_list.empty() && ++loop_count)
     {
@@ -37,7 +39,7 @@ bool AStar::run()
             if (!reviewed)
             {
                 set_score(state, tmp_g);
-                _open_list.push(state);
+                add_to_open(state);
                 _available_states.push_back(state);
                 _from[state] = _curr_state;
             }
@@ -50,7 +52,7 @@ bool AStar::run()
                     if (in_closed(reviewed))
                     {
                         remove_from_closed(reviewed);
-                        _open_list.push(reviewed);
+                        add_to_open(reviewed);
                     }
                 }
             }
@@ -59,31 +61,35 @@ bool AStar::run()
             (size == 4 && loop_count >= 600000) ||
             (size >= 5 && loop_count >= 1000000))
             return false;
+
+        _complexity_in_size = (_open_list.size() > _complexity_in_size) ? _open_list.size() : _complexity_in_size;
     }
     return (_solved = false);
 }
 void AStar::print_solution()
 {
-    if (!_solved)
+    if (_solved)
     {
+        std::vector<Puzzle *> res;
+        Puzzle *p = _curr_state;
+        while(p)
+        {
+            res.push_back(p);
+            p = _from[p];
+        }
+        for(int i = res.size() - 1; i >= 0; --i)
+            std::cout << *(res[i]);
+        std::cout << "\n" << res.size() - 1 << " steps" << std::endl;
+    }
+    else
         std::cout << "Solution not found" << std::endl;
-        return ;
-    }
-    std::vector<Puzzle *> res;
-    Puzzle *p = _curr_state;
-    while(p)
-    {
-        res.push_back(p);
-        p = _from[p];
-    }
-    for(int i = res.size() - 1; i >= 0; --i)
-        std::cout << *(res[i]);
-    std::cout << "\n" << res.size() - 1 << " steps" << std::endl;
+    std::cout << _complexity_in_time << "\t<- complexity in time" << std::endl;
+    std::cout << _complexity_in_size << "\t<- complexity in size" << std::endl;
 }
 
 void AStar::remove_from_closed(Puzzle *p)
 {
-    for(std::vector<Puzzle *>::iterator it = _closed_list.begin(); it != _closed_list.end(); ++it)
+    for(auto it = _closed_list.begin(); it != _closed_list.end(); ++it)
     {
         if (*it == p)
         {
@@ -99,10 +105,17 @@ Puzzle *AStar::is_under_review(Puzzle *p)
             return item;
     return NULL;
 }
+
+void AStar::add_to_open(Puzzle *p)
+{
+    _open_list.push(p);
+    _complexity_in_time++;
+}
+
 Puzzle *AStar::in_closed(Puzzle *p)
 {
     for(auto item: _closed_list)
-        if (item == p)
+        if (*item == *p)
             return item;
     return NULL;
 }
@@ -147,7 +160,8 @@ std::vector<Puzzle *> AStar::available_states(void)
 void AStar::close_top_state()
 {
     _open_list.pop();
-    _closed_list.push_back(_curr_state);
+    _closed_list.insert(_curr_state);
+    // _closed_list.push_back(_curr_state);
 
 }
 void AStar::compute_top_state(void)

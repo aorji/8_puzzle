@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:09:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 13:40:48 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/16 14:26:12 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,13 @@ struct ComparePuzzle {  //for std::priority_queue
     {
         //with min f score is at the top
         return p1->get_fscore() > p2->get_fscore(); 
+    } 
+};
+
+struct ComparePuzzleSet {  //for std::priority_queue
+    bool operator()(Puzzle *p1, Puzzle *p2) 
+    {
+        return p1 < p2;
     } 
 };
 
