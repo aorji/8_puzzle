@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:55:42 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 14:32:31 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/16 16:37:37 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ private:
     bool _solved;
     std::priority_queue<Puzzle *, std::vector<Puzzle *>, ComparePuzzle> _open_list;
     std::set<Puzzle *, ComparePuzzleSet> _closed_list;
-    // std::vector<Puzzle *> _closed_list;
     Puzzle *_curr_state;
     Puzzle *_goal_state;
     std::map<Puzzle *, Puzzle *> _from;
@@ -43,7 +42,7 @@ private:
     
     void add_to_open(Puzzle *p);
     void close_top_state();
-    Puzzle *in_closed(Puzzle *p);
+    bool in_closed(Puzzle *p);
     void remove_from_closed(Puzzle *p);
     Puzzle *is_under_review(Puzzle *p);
     std::vector<Puzzle *> available_states(void);

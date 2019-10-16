@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 20:27:34 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 14:50:30 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/16 16:37:14 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,12 +112,11 @@ void AStar::add_to_open(Puzzle *p)
     _complexity_in_time++;
 }
 
-Puzzle *AStar::in_closed(Puzzle *p)
+bool AStar::in_closed(Puzzle *p)
 {
-    for(auto item: _closed_list)
-        if (*item == *p)
-            return item;
-    return NULL;
+    if (_closed_list.count(p) == 1)
+        return true;
+    return false;
 }
 std::vector<Puzzle *> AStar::available_states(void)
 {
@@ -161,7 +160,6 @@ void AStar::close_top_state()
 {
     _open_list.pop();
     _closed_list.insert(_curr_state);
-    // _closed_list.push_back(_curr_state);
 
 }
 void AStar::compute_top_state(void)

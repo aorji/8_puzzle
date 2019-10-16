@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:09:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 16:15:07 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/16 16:39:09 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ struct ComparePuzzle {  //for std::priority_queue
 };
 
 struct ComparePuzzleSet {  //for std::priority_queue
-    bool operator()(Puzzle *p1, Puzzle *p2) 
+    bool operator()(Puzzle *p1, Puzzle *p2) const
     {
         return p1 < p2;
     } 
