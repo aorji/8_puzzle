@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:09:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 14:26:12 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/16 16:15:07 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ private:
     float _fscore;
     float _gscore;
 
-    void split(std::string, std::vector<std::string> &, char dlm);
+    void split(std::string, std::vector<std::string> &container, char dlm);
 };
 
 bool operator==(Puzzle const& p1, Puzzle const &p2);
