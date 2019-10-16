@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 20:27:34 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 16:37:14 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/16 17:10:04 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ AStar::AStar(Puzzle *init_state, eHeuristic heuristic): _curr_state(init_state)
     set_goal_state();
     _heuristic = choose_heuristic(heuristic);
 }
+
 bool AStar::run()
 {
     int loop_count = 0;
@@ -66,6 +67,7 @@ bool AStar::run()
     }
     return (_solved = false);
 }
+
 void AStar::print_solution()
 {
     if (_solved)
@@ -98,6 +100,7 @@ void AStar::remove_from_closed(Puzzle *p)
         }
     }
 }
+
 Puzzle *AStar::is_under_review(Puzzle *p)
 {
     for(auto item: _available_states)
@@ -118,6 +121,7 @@ bool AStar::in_closed(Puzzle *p)
         return true;
     return false;
 }
+
 std::vector<Puzzle *> AStar::available_states(void)
 {
     //i % size - row; i / size - col
@@ -156,20 +160,24 @@ std::vector<Puzzle *> AStar::available_states(void)
     }
     return available_states;
 }
+
 void AStar::close_top_state()
 {
     _open_list.pop();
     _closed_list.insert(_curr_state);
 
 }
+
 void AStar::compute_top_state(void)
 {
     _curr_state = _open_list.top();
 }
+
 bool AStar::is_goal_state()
 {
     return *_curr_state == *_goal_state;
 }
+
 void AStar::set_goal_state()
 {
     int size = _curr_state->get_size();
@@ -216,6 +224,7 @@ void AStar::set_goal_state()
     }
     _goal_state = new Puzzle(goal_state, size);
 }
+
 void AStar::set_score(Puzzle *p, int g)
 {
     p->set_gscore(g);

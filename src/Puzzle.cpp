@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:29:26 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 16:18:41 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/16 17:04:19 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,6 @@ Puzzle & Puzzle::operator=(Puzzle const &p)
         Puzzle(p).swap(*this);
     return *this;
 }
-// bool Puzzle::operator<(const Puzzle & p) const //for std::set
-// {
-//     int size = _size * _size;
-//     int i = 0;
-//     for(int i = 0; i < size; ++i)
-//         if (_data[i] != p._data[i])
-//             return _data[i] < p._data[i];
-//     return false;
-// }
 
 bool operator==(Puzzle const& p1, Puzzle const &p2)
 {
