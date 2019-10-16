@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 18:43:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 18:14:15 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/16 13:29:18 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,14 @@ public:
     ~Manager(){ /*nothing to dealloc */ }
 
     void run(){
-        choose_heuristic();
         Puzzle *init_state = new Puzzle();
         init_state->fill_in();
-        if (!check_solability(init_state))
+        std::cout << *init_state << std::endl;
+        if (!is_valid(init_state))
+            throw InvalidePuzzle();
+        if (!is_solvable(init_state))
             throw NotSolvable();
+        choose_heuristic();
         AStar solver(init_state, _heuristic);
         solver.run();
         solver.print_solution();
@@ -67,7 +70,7 @@ private:
         return inv_count; 
     }
 
-    bool check_solability(Puzzle *p)
+    bool is_solvable(Puzzle *p)
     {
         int inversion = count_inversion(p);
         if (p->get_size() % 2 == 1)
@@ -78,6 +81,17 @@ private:
             if (row % 2 == 1) return !(inversion % 2);
             else return (inversion % 2);
         }
+    }
+    bool is_valid(Puzzle *p)
+    {
+        std::set<int, std::greater <int>> params;
+        int size = p->get_size();
+        size *= size;
+        for(int i = 0; i < size; ++i)
+            params.insert(p->get_data()[i]);
+        if (*(params.lower_bound(0)) != 0 || *(params.upper_bound(size)) != size - 1)
+            return false;
+        return (int)params.size() == size;
     }
     
     int _ac;

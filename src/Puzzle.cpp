@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:29:26 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/14 18:14:33 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/16 13:48:10 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void Puzzle::reset_fg_scores(void)
 
 void Puzzle::fill_in(void)
 {
-    int zero_count = 0;
     std::string line;
     std::vector<std::string> params;
 
@@ -73,7 +72,7 @@ void Puzzle::fill_in(void)
     for(int i = 0; i < _size; ++i)
     {
         std::getline(std::cin, line);
-        split(line, params);
+        split(line, params, ' ');
         for(int j = 0; j < _size; ++j)
         {
             int elem;
@@ -84,22 +83,18 @@ void Puzzle::fill_in(void)
             }
             _data[k] = elem;
             if (_data[k] == 0)
-            {
                 _zero_tile = k;
-                zero_count++;
-            }
             k++;
         }
     }
-    if (zero_count != 1)
-        throw InvalidePuzzle();
 }
 
-void Puzzle::split(std::string str, std::vector<std::string> &container)
+void Puzzle::split(std::string str, std::vector<std::string> &container, char dlm)
 {
     std::stringstream ss(str);
     std::string token;
-    while (std::getline(ss, token, ' ')) {
+    while (std::getline(ss, token, dlm)) {
+        if (token == "\0") continue;
         container.push_back(token);
     }
 }
