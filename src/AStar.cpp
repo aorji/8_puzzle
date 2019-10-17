@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 20:27:34 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/17 18:32:29 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/17 22:32:48 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,10 +230,10 @@ void AStar::set_goal_state()
     delete [] goal_state;
 }
 
-void AStar::set_score(Puzzle *p, int g)
+void AStar::set_score(Puzzle *p, float g)
 {
     p->set_gscore(g);
-    p->set_fscore(_heuristic->path_cost(p, _goal_state));
+    p->set_fscore(g + _heuristic->path_cost(p, _goal_state));
 }
 
 HeuristicFunction *AStar::choose_heuristic(eHeuristic heuristic)

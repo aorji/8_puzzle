@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:55:42 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/17 13:25:41 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/17 22:38:30 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ private:
     bool is_goal_state();
     void set_goal_state();
     
-    void set_score(Puzzle *p, int g);
-    inline int distance()
+    void set_score(Puzzle *p, float g);
+    inline float distance()
     {
-        return 1;
+        return 0.3;
     }
 
     HeuristicFunction *choose_heuristic(eHeuristic heuristic);
