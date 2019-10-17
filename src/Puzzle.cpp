@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 14:29:26 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 17:04:19 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/17 13:46:10 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ void Puzzle::fill_in(void)
     int k = 0;
     for(int i = 0; i < _size; ++i)
     {
-        std::getline(std::cin, line);
+        if (!std::getline(std::cin, line))
+            throw InvalidePuzzle();
         split(line, params, ' ');
         for(int j = 0; j < _size; ++j)
         {
