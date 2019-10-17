@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:55:42 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 16:37:37 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/17 13:25:41 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ public:
     explicit AStar(Puzzle *init_state, eHeuristic heuristic);
     bool run();
     void print_solution();
+    ~AStar();
 
 private:
     bool _solved;
@@ -45,7 +46,9 @@ private:
     bool in_closed(Puzzle *p);
     void remove_from_closed(Puzzle *p);
     Puzzle *is_under_review(Puzzle *p);
+    void add_to_available(Puzzle *p);
     std::vector<Puzzle *> available_states(void);
+    Puzzle *create_puzzle(int *data, int size, int pos);
     
     bool is_goal_state();
     void set_goal_state();

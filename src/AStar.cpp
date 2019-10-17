@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 20:27:34 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 17:10:04 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/17 13:36:40 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,21 @@ AStar::AStar(Puzzle *init_state, eHeuristic heuristic): _curr_state(init_state)
     _heuristic = choose_heuristic(heuristic);
 }
 
+AStar::~AStar()
+{
+    for(auto puzzle: _available_states)
+        delete puzzle;
+    delete _goal_state;
+    delete _heuristic;
+}
+
 bool AStar::run()
 {
     int loop_count = 0;
     int size = _goal_state->get_size();
     set_score(_curr_state, 0);
     add_to_open(_curr_state);
-    _available_states.push_back(_curr_state);
+    add_to_available(_curr_state);
     while (!_open_list.empty() && ++loop_count)
     {
         compute_top_state();
@@ -41,7 +49,7 @@ bool AStar::run()
             {
                 set_score(state, tmp_g);
                 add_to_open(state);
-                _available_states.push_back(state);
+                add_to_available(state);
                 _from[state] = _curr_state;
             }
             else
@@ -109,13 +117,18 @@ Puzzle *AStar::is_under_review(Puzzle *p)
     return NULL;
 }
 
+void AStar::add_to_available(Puzzle *p)
+{
+    _available_states.push_back(p);
+}
+
 void AStar::add_to_open(Puzzle *p)
 {
     _open_list.push(p);
     _complexity_in_time++;
 }
 
-bool AStar::in_closed(Puzzle *p)
+bool AStar::in_closed(Puzzle *p) //search by pointer adress, not by value
 {
     if (_closed_list.count(p) == 1)
         return true;
@@ -129,37 +142,28 @@ std::vector<Puzzle *> AStar::available_states(void)
     int *data = _curr_state->get_data();
     int zero = _curr_state->get_zero_tile();
     int size = _curr_state->get_size();
-    Puzzle *new_state;
     //UP
-    if (zero - size >= 0)
-    {
-        new_state = new Puzzle(data, size);
-        new_state->swap_tile(zero - size);
-        available_states.push_back(new_state);
-    }
+    if (zero - size >= 0) 
+        available_states.push_back(create_puzzle(data, size, zero - size));
     //DOWN
     if (zero + size < size * size)
-    {
-        new_state = new Puzzle(data, size);
-        new_state->swap_tile(zero + size);
-        available_states.push_back(new_state);
-    }
-    // //LEFT
+        available_states.push_back(create_puzzle(data, size, zero + size));
+    //LEFT
     if (zero - 1 >= 0 && (zero - 1) % size == (zero % size) - 1)
-    {
-        new_state = new Puzzle(data, size);
-        new_state->swap_tile(zero - 1);
-        available_states.push_back(new_state);
-    }
+        available_states.push_back(create_puzzle(data, size, zero - 1));
     //RIGHT
     if (zero + 1 < size * size && ((zero + 1) % size) == ((zero % size) + 1))
-    {
-        new_state = new Puzzle(data, size);
-        new_state->swap_tile(zero + 1);
-        available_states.push_back(new_state);
-    }
+        available_states.push_back(create_puzzle(data, size, zero + 1));
     return available_states;
 }
+
+Puzzle *AStar::create_puzzle(int *data, int size, int pos)
+{
+    Puzzle *new_state = new Puzzle(data, size);
+    new_state->swap_tile(pos);
+    return new_state;
+}
+
 
 void AStar::close_top_state()
 {
@@ -223,6 +227,7 @@ void AStar::set_goal_state()
         }
     }
     _goal_state = new Puzzle(goal_state, size);
+    delete [] goal_state;
 }
 
 void AStar::set_score(Puzzle *p, int g)

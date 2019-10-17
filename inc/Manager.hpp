@@ -6,7 +6,7 @@
 /*   By: aorji <aorji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/04 18:43:46 by aorji             #+#    #+#             */
-/*   Updated: 2019/10/16 13:29:18 by aorji            ###   ########.fr       */
+/*   Updated: 2019/10/17 13:37:29 by aorji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,8 @@ public:
     ~Manager(){ /*nothing to dealloc */ }
 
     void run(){
-        Puzzle *init_state = new Puzzle();
+        Puzzle *init_state = new Puzzle(); //will be deleted in AStar destructor
         init_state->fill_in();
-        std::cout << *init_state << std::endl;
         if (!is_valid(init_state))
             throw InvalidePuzzle();
         if (!is_solvable(init_state))
@@ -70,7 +69,7 @@ private:
         return inv_count; 
     }
 
-    bool is_solvable(Puzzle *p)
+    bool is_solvable(Puzzle *p) //http://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
     {
         int inversion = count_inversion(p);
         if (p->get_size() % 2 == 1)
